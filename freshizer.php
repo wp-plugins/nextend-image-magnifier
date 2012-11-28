@@ -23,20 +23,20 @@
 // When the new (cached) file is older than this time, script automatically
 // checks, if the old file has been changed. If not, then ve serve cached file
 // again. If yes, cached file is deleted and resized again.
-CONST CACHE_TIME = 0;//604800; // (60 * 60 * 24 * 7); // 7 days
+//CONST CACHE_TIME = 604800;//604800; // (60 * 60 * 24 * 7); // 7 days
 
 // CACHE DELETE FILES AFTER
 // ========================
 // Hard delete files ( not only compare if the original file has been changed,
 // but hardly delete from caching folder ), every X seconds. Please fill a large
 // number, because cached files runs much more speedely
-CONST CACHE_DELETE_FILES_AFTER = 0;
+//CONST CACHE_DELETE_FILES_AFTER = 0;
 
 // CACHE DELETE FILES - check every X hits
 // =======================================
 // How often do we check if there are files which should be hard deleted ?
 // Optimal is approx 400 - 500 hits
-CONST CACHE_DELETE_FILES_check_every_x_hits = 0;
+//CONST CACHE_DELETE_FILES_check_every_x_hits = 0;
 
 
 
@@ -501,7 +501,7 @@ class blImgCache {
 		$currentTimestamp = time();
 		$oldTimestamp = $cachedImageInfo->timestamp;
 		
-		if( ( $oldTimestamp + CACHE_TIME ) < $currentTimestamp ) {
+		if( ( $oldTimestamp + 604800 ) < $currentTimestamp ) {
 			return false;
 		} else {
 			return true;
@@ -559,18 +559,18 @@ class blImgCache {
 			$this->_setCacheFileUnparsed( $cacheFileContentUnparsed );
 		}
 		
-		if( $cacheFileContentUnparsed->hitsAfterLastDelete >= CACHE_DELETE_FILES_check_every_x_hits ) {
+		if( $cacheFileContentUnparsed->hitsAfterLastDelete >= 400 ) {
 			$this->_hardDeleteCache();
 		}
 	}
 	
 	private function _hardDeleteCache() {
-		//var_dump(CACHE_DELETE_FILES_check_every_x_hits);
+		//var_dump(400);
 		$unsetArray = array();
 		if( !empty( $this->_getCacheFileUnparsed()->dataHolder ) ) {
 			foreach( $this->_getCacheFileUnparsed()->dataHolder as $url => $fileData ) {
 				//pathNew, timestamp
-				if( ( $fileData->timestamp  + CACHE_DELETE_FILES_AFTER ) <= time() ) {
+				if( ( $fileData->timestamp  + 10000000 ) <= time() ) {
 					$unsetArray[] = $url;
 					unlink( $fileData->pathNew);
 				}
@@ -584,7 +584,7 @@ class blImgCache {
 		if( !empty( $this->_getCacheFileUnparsed()->remoteDataHolder ) ) {
 			foreach( $this->_getCacheFileUnparsed()->remoteDataHolder as $url => $fileData ) {
 				//pathNew, timestamp
-				if( ( $fileData->timestamp  + CACHE_DELETE_FILES_AFTER ) <= time() ) {
+				if( ( $fileData->timestamp  + 10000000 ) <= time() ) {
 					$unsetArray[] = $url;
 					unlink( $fileData->pathNew);
 				}
