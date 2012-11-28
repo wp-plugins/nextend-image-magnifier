@@ -11,16 +11,17 @@
   
   function new_im_MediaPopupHandler(){
   	window.send_to_editor = function(html) {
-      
       var html = $(html);
-      $('#new_im_link_url').val(html.attr('href'));
-      
-  		var img = $('img',html);
-  		jQuery('#new_im_image').val(img.attr('src'));
-      
-  		jQuery('#new_im_title').val(img.attr('title'));
-      
-  		jQuery('#new_im_description').val(img.attr('alt'));
+      var img = html;
+      if(html.prop("tagName") != 'IMG'){
+	      $('#new_im_link_url').val(html.attr('href'));
+	  		img = $('img',html);
+  			$('#new_im_title').val(img.attr('title'));
+  			$('#new_im_description').val(img.attr('alt'));
+  		}else{ // NextGen Gallery
+  			$('#new_im_title').val(img.attr('alt'));
+  		}
+  		$('#new_im_image').val(img.attr('src'));
       
   		tb_remove();
   	}

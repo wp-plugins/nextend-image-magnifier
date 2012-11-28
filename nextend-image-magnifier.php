@@ -5,7 +5,7 @@ Plugin URI: http://nextendweb.com
 Description: Easy to use plugin for high-res images with magnifying glass 
 Author: Roland Soos
 Author URI: http://nextendweb.com
-Version: 1.0.1
+Version: 1.0.2
 License: GPL2
 */
 
@@ -514,11 +514,13 @@ function new_im_media_buttons($editor_id){
 		    element.fireEvent("on" + event.eventType, event);
 		  }
 		};
-		if(QTags){
-			QTags.addButton( 'nextend_im_magnifier_btn', 'Image magnifier', fireFN);
-		}else if(edButton){
-			edButton('nextend_im_magnifier_btn', 'Image magnifier', fireFN);
-		}
+		jQuery(document).ready(function () {
+			if(QTags){
+				QTags.addButton( 'nextend_im_magnifier_btn', 'Image magnifier', fireFN);
+			}else if(edButton){
+				edButton('nextend_im_magnifier_btn', 'Image magnifier', fireFN);
+			}
+		});
 	</script>
 	<?php
 }
