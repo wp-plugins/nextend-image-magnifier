@@ -1,6 +1,6 @@
 === Nextend Image Magnifier ===
 Contributors: nextendweb 
-Tags: image, gallery, magnifier, magny, nextend, picture, magnify
+Tags: image, gallery, magnifier, magny, nextend, picture, magnify, enlarge, glass, zoom
 Donate link: https://www.facebook.com/nextendweb
 Requires at least: 3.0
 Tested up to: 3.4
