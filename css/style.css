@@ -72,6 +72,7 @@ Frames
 }
 
 .new-im-frame img{
+  margin: 0;
   width: 100%;
   display: block;
 	-webkit-user-select: none;                /* disable cut copy paste */

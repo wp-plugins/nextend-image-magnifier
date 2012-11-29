@@ -38,33 +38,31 @@
 // Optimal is approx 400 - 500 hits
 //CONST CACHE_DELETE_FILES_check_every_x_hits = 0;
 
-
-
 class blFile {
 	CONST POINTER_END = 'pend';
 	
-	private $_handle = null;
-	private $_fileSize = null;
-	private $_path = null;
-	private $_writeBuffer = '';
+	var $_handle = null;
+	var $_fileSize = null;
+	var $_path = null;
+	var $_writeBuffer = '';
 
 /*----------------------------------------------------------------------------*/
 /* FUNCTIONS PUBLIC
 /*----------------------------------------------------------------------------*/
 
-	public function __construct( $handle, $path ) {
+	function __construct( $handle, $path ) {
 		$this->_setHandle( $handle );
 		$this->_setPath( $path );
 	}
 
-	public function readAll() {
+	function readAll() {
 		if( $this->getFileSize() > 0 )
 			return (fread( $this->getHandle(), $this->getFileSize() ));
 		else 
 			return null;
 	}
 
-	public function readAllAndClose() {
+	function readAllAndClose() {
 		$fileContent = $this->readAll();
 		$this->closeFile();
 
@@ -75,17 +73,17 @@ class blFile {
 	 * @param string $content
 	 * @return blFile
 	 */
-	public function write( $content ) {
+	function write( $content ) {
 		fwrite( $this->getHandle(), ( $content ) );
 		return $this;
 	}
 	
-	public function writeBuffered( $content ) {
+	function writeBuffered( $content ) {
 		$this->_setWriteBuffer( $content );
 		return $this;
 	}
 	
-	/*public function __destruct() {
+	/*function __destruct() {
 		var_dump($this);
 		if( $this->_writeBuffer != '' ) {
 			$this->write( $this->_writeBuffer ) ;
@@ -97,13 +95,13 @@ class blFile {
 	/**
 	 * @return blFile
 	 */
-	public function truncate() {
+	function truncate() {
 		ftruncate( $this->getHandle(), 0);
 		$this->pointerStart();
 		return $this;
 	}
 
-	public function closeFile() {
+	function closeFile() {
 		if( $this->getHandle() !== null ) {
 			fclose( $this->getHandle() );
 			$this->_setHandle(null);
@@ -113,7 +111,7 @@ class blFile {
 	/**
 	 * @return blFile
 	 */
-	public function pointerStart() {
+	function pointerStart() {
 		$this->_movePointer( 0 );
 		return $this;
 	}
@@ -121,7 +119,7 @@ class blFile {
 	/**
 	 * @return blFile
 	 */
-	public function pointerEnd() {
+	function pointerEnd() {
 		$this->_movePointer( self::POINTER_END );
 		return $this;
 	}
@@ -130,7 +128,7 @@ class blFile {
 	 * @param int $where
 	 * @return blFile
 	 */
-	public function pointerTo( $where ) {
+	function pointerTo( $where ) {
 		return $this->_movePointer( $where );
 		return $this;
 	}
@@ -139,7 +137,7 @@ class blFile {
 /*----------------------------------------------------------------------------*/
 /* FUNCTIONS PRIVATE
 /*----------------------------------------------------------------------------*/
-	private function _movePointer( $where ) { 
+	function _movePointer( $where ) { 
 		if( $where == self::POINTER_END ) {
 			fseek( $this->getHandle(), 0, SEEK_END);
 		} else {
@@ -151,31 +149,31 @@ class blFile {
 /* SETTERS AND GETTERS
 /*----------------------------------------------------------------------------*/
 
-	private function _setWriteBuffer( $content ) {
+	function _setWriteBuffer( $content ) {
 		$this->_writeBuffer = $content;
 	}
 	
-	private function _getWriteBuffer() {
+	function _getWriteBuffer() {
 		return $this->_writeBuffer;
 	}
 	
-	public function getHandle() {
+	function getHandle() {
 		return $this->_handle;
 	}
 
-	private function _setHandle( $handle ) {
+	function _setHandle( $handle ) {
 		$this->_handle = $handle;
 	}
 
-	public function getPath() {
+	function getPath() {
 		return $this->_path;
 	}
 
-	private function _setPath( $path ) {
+	function _setPath( $path ) {
 		$this->_path = $path;
 	}
 
-	public function getFileSize() {
+	function getFileSize() {
 		if( $this->_fileSize == null ) {
 			$this->_fileSize = filesize( $this->getPath() );
 		}
@@ -186,7 +184,7 @@ class blFile {
 
 
 class blFileSystem {
-	private $_errors = array();
+	var $_errors = array();
 /*----------------------------------------------------------------------------*/
 /* FUNCTIONS PUBLIC
 /*----------------------------------------------------------------------------*/	
@@ -198,7 +196,7 @@ class blFileSystem {
 	 * @param bool $writing
 	 * @return blFile
 	 */
-	public function openFile( $path, $writing = false ) {
+	function openFile( $path, $writing = false ) {
 	if( file_exists( $path ) ) {
 			$mode = ( $writing ) ? 'r+' : 'r';
 		} else {
@@ -213,20 +211,20 @@ class blFileSystem {
 	 * @param bool $writing
 	 * @return blFile
 	 */
-	public function createFile( $path, $writing = false ) {
+	function createFile( $path, $writing = false ) {
 		$mode = ( $writing ) ? 'c+' : 'c';
 		return $this->_openFile( $path, $mode );	
 	}
 	
-	public function deleteFile( $path ) {}
+	function deleteFile( $path ) {}
 	
-	public function createDir( $path ) {
+	function createDir( $path ) {
 		if( mkdir( $path, 0777, true ) === false ) {
 			$this->_addError( 'Unable to create DIR :'. $path );
 		}
 	}
 	
-	public function saveImage( $image, $path ) {
+	function saveImage( $image, $path ) {
 		$pinfo = pathinfo( $path );
 		$ext = $pinfo['extension'];
 		$return = null;
@@ -255,7 +253,7 @@ class blFileSystem {
 /* FUNCTIONS PRIVATE
 /*----------------------------------------------------------------------------*/	
 	
-	private function _openFile( $path, $mode ) {
+	function _openFile( $path, $mode ) {
 		$pathInfo = pathinfo( $path );
 		$dirname = $pathInfo['dirname'];
 		$file = null;
@@ -273,40 +271,34 @@ class blFileSystem {
 /*----------------------------------------------------------------------------*/
 /* SETTERS AND GETTERS
 /*----------------------------------------------------------------------------*/
-	public function getErorrs() {
+	function getErorrs() {
 		return $this->_errors;
 	}
 	
-	private function _addError( $error ) {
+	function _addError( $error ) {
 		$this->_errors[] = $error;
 	}
 	
 }
 
-
-interface blIConnection {
-	public function getContent( $url );
-}
-
-
-class blConnectionAdapteur implements blIConnection {
+class blConnectionAdapteur {
 	/**
 	 * @var blIConnection
 	 */
-	private $_connectionMethod = null;
+	var $_connectionMethod = null;
 	
 /*----------------------------------------------------------------------------*/
-/* PUBLIC FUNCTIONS
+/* FUNCTIONS
 /*----------------------------------------------------------------------------*/	
 	
-	public function getContent( $url ) {
+	function getContent( $url ) {
 		return $this->_getConnectionMethod()->getContent($url);
 	}
 /*----------------------------------------------------------------------------*/
-/* PRIVATE FUNCTIONS
+/* FUNCTIONS
 /*----------------------------------------------------------------------------*/	
 	
-	private function _createProperConnection() {
+	function _createProperConnection() {
 		if( ini_get('allow_url_fopen') ) {
 			$this->_setConnectionMethod( new blConnectionFopen() );
 		} else if( function_exists( 'curl_init') ) {
@@ -318,14 +310,14 @@ class blConnectionAdapteur implements blIConnection {
 /* GETTERS AND SETTERS
 /*----------------------------------------------------------------------------*/
 	
-	private function _setConnectionMethod( blIConnection $connectionMethod ) {
+	function _setConnectionMethod( $connectionMethod ) {
 		$this->_connectionMethod = $connectionMethod;
 	}
 	
 	/**
 	 * @return blIConnection
 	 */
-	private function _getConnectionMethod() {
+	function _getConnectionMethod() {
 		if( $this->_connectionMethod == null ) {
 			$this->_createProperConnection();
 		}
@@ -334,8 +326,8 @@ class blConnectionAdapteur implements blIConnection {
 }
 
 
-class blConnectionCurl implements blIConnection {
-	public function getContent( $url ) {
+class blConnectionCurl {
+	function getContent( $url ) {
 		$ch = curl_init();
 		$timeout = 5;
 		curl_setopt($ch, CURLOPT_URL, $url);
@@ -349,8 +341,8 @@ class blConnectionCurl implements blIConnection {
 }
 
 
-class blConnectionFopen implements blIConnection {
-	public function getContent( $url ) {
+class blConnectionFopen {
+	function getContent( $url ) {
 		
 		$handle = fopen( $url, 'rb' );
 		$fileContent = '';
@@ -369,20 +361,20 @@ class blDownloader {
 	/**
 	 * @var blIConnection
 	 */
-	private $_connectionMethod = null;
+	var $_connectionMethod = null;
 	
-	public function getContent( $url ) {
+	function getContent( $url ) {
 		return $this->_getConnectionMethod()->getContent($url);
 	}
 	
-	private function _setConnectionMethod( blIConnection $connectionMethod ) {
+	function _setConnectionMethod( $connectionMethod ) {
 		$this->_connectionMethod = $connectionMethod;
 	}
 	
 	/**
 	 * @return blIConnection
 	 */
-	private function _getConnectionMethod() {
+	function _getConnectionMethod() {
 		if( $this->_connectionMethod == null ) {
 			$this->_setConnectionMethod( new blConnectionAdapteur() );
 		}
@@ -398,20 +390,20 @@ class blImgCache {
 	/**
 	 * @var blFileSystem
 	 */
-	private $_fileSystem = null;
+	var $_fileSystem = null;
 	
 	/**
 	 * @var blFile
 	 */
-	private $_cacheFile = null;
+	var $_cacheFile = null;
 	
-	private $_cacheFileUnparsed = null;
+	var $_cacheFileUnparsed = null;
 	
-	private $_cacheFileParsed = null;
+	var $_cacheFileParsed = null;
 	
-	private $_cacheFileDir = null;
+	var $_cacheFileDir = null;
 	
-	public function __construct( blFileSystem $fileSystem, $cacheFileDir ) {
+	function __construct( blFileSystem $fileSystem, $cacheFileDir ) {
 		
 		$this->_setFileSystem($fileSystem);
 		$this->_setCacheFileDir($cacheFileDir . self::CACHE_FILENAME );
@@ -421,7 +413,7 @@ class blImgCache {
 		
 	}
 	
-	public function addCachedFileRemote( $urlNew, $pathNew, $urlOld ) {
+	function addCachedFileRemote( $urlNew, $pathNew, $urlOld ) {
 		$cacheFileUnparsed = $this->_getCacheFileUnparsed();
 		
 		if( $this->_cacheFileUnparsed == null ) {
@@ -438,7 +430,7 @@ class blImgCache {
 		}
 	}
 	
-	public function addCachedFile( $urlNew, $urlOld, $pathNew, $pathOld, $remote = false ) {
+	function addCachedFile( $urlNew, $urlOld, $pathNew, $pathOld, $remote = false ) {
 		$cacheFileUnparsed = $this->_getCacheFileUnparsed();
 		
 		if( $this->_cacheFileUnparsed == null ) {
@@ -459,17 +451,17 @@ class blImgCache {
 		
 	} 
 	
-	public function deleteCacheInfo( $urlNew ) {
+	function deleteCacheInfo( $urlNew ) {
 		
 		
 		unset( $this->_getCacheFileUnparsed()->dataHolder[ $urlNew ] );
 	}
 	
-	public function deleteRemoteCacheInfo( $url ) {
+	function deleteRemoteCacheInfo( $url ) {
 		unset( $this->_getCacheFileUnparsed()->remoteDataHolder[ $url ] );
 	}
 	
-	public function getCacheInfo( $urlNew ) {
+	function getCacheInfo( $urlNew ) {
 		$cacheFileUnparsed = $this->_getCacheFileUnparsed();
 		if( isset( $cacheFileUnparsed->dataHolder[ $urlNew ] ) ) {
 			$cachedImageInfo = $cacheFileUnparsed->dataHolder[ $urlNew ];
@@ -480,13 +472,13 @@ class blImgCache {
 		}
 	}
 	
-	public function touchCachedFile( $urlNew ) {
+	function touchCachedFile( $urlNew ) {
 		$cacheFileUnparsed = $this->_getCacheFileUnparsed();
 		$cacheFileUnparsed->dataHolder[ $urlNew ]->valid = true;
 		$cacheFileUnparsed->dataHolder[ $urlNew ]->timestamp = time();
 	}
 	
-	public function getRemoteCacheInfo( $urlOld ) {
+	function getRemoteCacheInfo( $urlOld ) {
 		$cacheFileUnparsed = $this->_getCacheFileUnparsed();
 		if( isset( $cacheFileUnparsed->remoteDataHolder[ $urlOld ] ) ) {
 			$cachedImageInfo = $cacheFileUnparsed->remoteDataHolder[ $urlOld ];
@@ -497,7 +489,7 @@ class blImgCache {
 		}
 	}
 	
-	private function _checkExpiration( stdClass $cachedImageInfo ) {
+	function _checkExpiration( stdClass $cachedImageInfo ) {
 		$currentTimestamp = time();
 		$oldTimestamp = $cachedImageInfo->timestamp;
 		
@@ -508,29 +500,29 @@ class blImgCache {
 		}
 	}
 	
-	/*public function deleteCacheInfo( $urlNew ) {
+	/*function deleteCacheInfo( $urlNew ) {
 		$cacheFileUnparsed = $this->_getCacheFileUnparsed();
 		unset( $cacheFileUnparsed->dataHolder[ $urlNew ] );
 		
 	}*/
 	
-	public function __destruct() {
+	function __destruct() {
 		
 		$this->saveCacheFile();
 	}
 	
-	public function saveCacheFile() {
+	function saveCacheFile() {
 		
 		$this->_parseCacheFile();
 		$this->_saveCacheFile();
 	}
 	
-	private function _parseCacheFile() {
+	function _parseCacheFile() {
 		$cacheFileParsed = serialize( $this->_getCacheFileUnparsed() );
 		$this->_setCacheFileParsed( $cacheFileParsed );
 	}
 	
-	private function _saveCacheFile() {
+	function _saveCacheFile() {
 		if( $this->_getCacheFile()->getHandle() == null ) return ;
 		$this->_getCacheFile()
 				->truncate()
@@ -539,7 +531,7 @@ class blImgCache {
 	}
 	
 	
-	private function _loadCacheFile() {
+	function _loadCacheFile() {
 		$cacheFile = $this->_getFileSystem()->openFile( $this->_getCacheFileDir(), true);
 		
 		$this->_setCacheFile( $cacheFile );
@@ -547,7 +539,7 @@ class blImgCache {
 		
 	}
 	
-	private function _unparseCacheFile() {
+	function _unparseCacheFile() {
 		if( $this->_getCacheFileParsed() != '') {
 			$cacheFileContentUnparsed = unserialize( $this->_getCacheFileParsed() );
 			$cacheFileContentUnparsed->hitsAfterLastDelete++;
@@ -564,7 +556,7 @@ class blImgCache {
 		}
 	}
 	
-	private function _hardDeleteCache() {
+	function _hardDeleteCache() {
 		//var_dump(400);
 		$unsetArray = array();
 		if( !empty( $this->_getCacheFileUnparsed()->dataHolder ) ) {
@@ -597,42 +589,42 @@ class blImgCache {
 	}
 	
 	
-	private function _setCacheFileParsed( $cacheFileParsed ) {
+	function _setCacheFileParsed( $cacheFileParsed ) {
 		$this->_cacheFileParsed = $cacheFileParsed;
 	}
 	
-	private function _getCacheFileParsed() {
+	function _getCacheFileParsed() {
 		return $this->_cacheFileParsed;
 	}
 	
-	private function _setCacheFileUnparsed( $cacheFileUnparsed ) {
+	function _setCacheFileUnparsed( $cacheFileUnparsed ) {
 		$this->_cacheFileUnparsed = $cacheFileUnparsed;
 	}
 	
-	private function _getCacheFileUnparsed() {
+	function _getCacheFileUnparsed() {
 		return $this->_cacheFileUnparsed;
 	}
 	
-	private function _setCacheFileDir( $cacheFileDir) {
+	function _setCacheFileDir( $cacheFileDir) {
 		$this->_cacheFileDir = $cacheFileDir;
 	}
 	
-	private function _getCacheFileDir() {
+	function _getCacheFileDir() {
 		return $this->_cacheFileDir;
 	}
 	
-	private function _setCacheFile( blFile $cacheFile ) {
+	function _setCacheFile( blFile $cacheFile ) {
 		$this->_cacheFile = $cacheFile;
 	}
 	
 	/**
 	 * @return blFile
 	 */
-	private function _getCacheFile() {
+	function _getCacheFile() {
 		return $this->_cacheFile;
 	}
 	
-	private function _setFileSystem( blFileSystem $fileSystem ) {
+	function _setFileSystem( blFileSystem $fileSystem ) {
 		$this->_fileSystem = $fileSystem;
 	}
 	
@@ -640,7 +632,7 @@ class blImgCache {
 	 * 
 	 * @return blFileSystem
 	 */
-	private function _getFileSystem() {
+	function _getFileSystem() {
 		return $this->_fileSystem;
 	}
 }
@@ -650,51 +642,51 @@ class blImgDownloader {
 	/**
 	 * @var blFileSystem
 	 */
-	private $_fileSystem = null;
+	var $_fileSystem = null;
 	
 	/**
 	 * @var blInputStreamAdapteour
 	 */
-	private $_inputStream = null;
+	var $_inputStream = null;
 	
-	public function __construct( blFileSystem $fileSystem, blInputStreamAdapteour $inputStreamAdapter ) {
+	function __construct( blFileSystem $fileSystem, blInputStreamAdapteour $inputStreamAdapter ) {
 		$this->_setFileSystem( $fileSystem );
 		$this->_setInputStream( $inputStreamAdapter );
 	}
 	
-	public function downloadImage( $originalPath, $newPath ) {
+	function downloadImage( $originalPath, $newPath ) {
 		$img = $this->_getInputStream()->open( $originalPath )->readAll();
 		if( $img != null ) {
 			$this->_getFileSystem()->createFile( $newPath, true)->write( $img )->closeFile();
 		}
 	}
 	
-	private function _setInputStream( blInputStreamAdapteour $inputStreamAdapter ) {
+	function _setInputStream( blInputStreamAdapteour $inputStreamAdapter ) {
 		$this->_inputStream = $inputStreamAdapter;
 	}
 	
 	/**
 	 * @return blInputStreamAdapteour
 	 */
-	private function _getInputStream() {
+	function _getInputStream() {
 		return $this->_inputStream;
 	}
 	
-	private function _setFileSystem( blFileSystem $fileSystem ) {
+	function _setFileSystem( blFileSystem $fileSystem ) {
 		$this->_fileSystem = $fileSystem;
 	}
 	/**
 	 * @return blFileSystem
 	 */
-	private function _getFileSystem() {
+	function _getFileSystem() {
 		return $this->_fileSystem;
 	}
 }
 
 
 interface blIInputStream {
-	public function open( $path );
-	public function readAll();
+	function open( $path );
+	function readAll();
 	
 }
 
@@ -703,14 +695,14 @@ class blInputStreamFile implements blIInputStream {
 	/**
 	 * @var blFileSystem
 	 */
-	private $_fileSystem = null;
+	var $_fileSystem = null;
 	
 	/**
 	 * @var blFile
 	 */
-	private $_openedFile = null;
+	var $_openedFile = null;
 	
-	public function __construct() {
+	function __construct() {
 		
 	}
 	
@@ -718,27 +710,27 @@ class blInputStreamFile implements blIInputStream {
 	 * (non-PHPdoc)
 	 * @see blIInputStream::open()
 	 */
-	public function open( $path ) {
+	function open( $path ) {
 		$file = $this->_getFileSystem()->openFile($path);
 		$this->_setFile( $file );
 		return $this;
 	}
 	
-	public function readAll() { 
+	function readAll() { 
 		return $this->_getFile()->readAllAndClose();
 	}
 	
 /*----------------------------------------------------------------------------*/
 /* SETTERS AND GETTERS
 /*----------------------------------------------------------------------------*/
-	private function _setFileSystem( blFileSystem $fileSystem ) {
+	function _setFileSystem( blFileSystem $fileSystem ) {
 		$this->_fileSystem = $fileSystem;
 	}
 	
 	/**
 	 * @return blFileSystem
 	 */
-	private function _getFileSystem() {
+	function _getFileSystem() {
 		if( $this->_fileSystem == null ) {
 			$this->_setFileSystem( new blFileSystem() );
 		}
@@ -746,14 +738,14 @@ class blInputStreamFile implements blIInputStream {
 		return $this->_fileSystem;
 	}
 	
-	private function _setFile( blFile $file ) {
+	function _setFile( blFile $file ) {
 		$this->_openedFile = $file;
 	}
 	
 	/**
 	 * @return blFile
 	 */
-	private function _getFile() {
+	function _getFile() {
 		return $this->_openedFile;
 	}
 }
@@ -763,22 +755,22 @@ class blInputStreamHttp implements blIInputStream {
 	/**
 	 * @var blDownloader
 	 */
-	private $_downloader = null;
-	private $_pageContent = '';
+	var $_downloader = null;
+	var $_pageContent = '';
 	
-	public function open( $path ) {
+	function open( $path ) {
 		$content = $this->_getDownloader()->getContent( $path );
 		$this->_setPageContent( $content );
 	}
 	
-	public function readAll() {
+	function readAll() {
 		return $this->_getPageContent();
 	}
 	
 	/**
 	 * @return blDownloader
 	 */
-	private function _getDownloader() {
+	function _getDownloader() {
 		if( $this->_downloader == null ) {
 			$this->_downloader = new blDownloader();
 		}
@@ -786,11 +778,11 @@ class blInputStreamHttp implements blIInputStream {
 		return $this->_downloader;
 	}
 	
-	private function _setPageContent( $pageContent ) {
+	function _setPageContent( $pageContent ) {
 		$this->_pageContent = $pageContent;
 	}
 	
-	private function _getPageContent() {
+	function _getPageContent() {
 		return $this->_pageContent;
 	}
 }
@@ -801,26 +793,26 @@ class blInputStreamAdapteour implements blIInputStream {
 	 * 
 	 * @var blIInputStream
 	 */
-	private $_inputStream = null;
+	var $_inputStream = null;
 	
 /*----------------------------------------------------------------------------*/
-/* PUBLIC FUNCTIONS
+/* FUNCTIONS
 /*----------------------------------------------------------------------------*/
 		
-	public function open( $path ) {
+	function open( $path ) {
 		$this->_createInputStream( $path );
 		$this->_getInputStream()->open($path);
 		return $this;
 	}
 	
-	public function readAll() {
+	function readAll() {
 		return $this->_getInputStream()->readAll();
 	}
 	
 /*----------------------------------------------------------------------------*/
-/* PRIVATE FUNCTIONS
+/* FUNCTIONS
 /*----------------------------------------------------------------------------*/	
-	private function _createInputStream( $path ) {
+	function _createInputStream( $path ) {
 		if( strpos( $path, 'http://') !== false ) {
 			$this->_setInputStream( new blInputStreamHttp() );
 		} else {
@@ -831,24 +823,24 @@ class blInputStreamAdapteour implements blIInputStream {
 /* SETTERS AND GETTERS
 /*----------------------------------------------------------------------------*/
 	
-	private function _setInputStream(  blIInputStream $inputStream ) {
+	function _setInputStream(  blIInputStream $inputStream ) {
 		$this->_inputStream = $inputStream;
 	}
 	
-	private function _getInputStream() {
+	function _getInputStream() {
 		return $this->_inputStream;
 	}
 }
 
 
 class fImgOneData {
-	public $path = null;
-	public $url = null;
-	public $filename = null;
-	public $width = null;
-	public $height = null;
-	public $timestamp = null;
-	public $crop = null;
+	var $path = null;
+	var $url = null;
+	var $filename = null;
+	var $width = null;
+	var $height = null;
+	var $timestamp = null;
+	var $crop = null;
 }
 
 class fImgData {
@@ -856,18 +848,18 @@ class fImgData {
 	 * 
 	 * @var fImgOneData
 	 */
-	public $new = null;
+	var $new = null;
 	
 	/**
 	 * 
 	 * @var fImgOneData
 	 */
-	public $old = null;
+	var $old = null;
 	
-	public $remote = false;
-	public $ready = false;
+	var $remote = false;
+	var $ready = false;
 	
-	public function __construct() {
+	function __construct() {
 		$this->new = new fImgOneData();
 		$this->old = new fImgOneData();
 	}
@@ -881,44 +873,44 @@ class fImgDeliverer {
 	/**
 	 * @var blFileSystem
 	 */
-	private $_fileSystem = null;
+	var $_fileSystem = null;
 	
 	
 	/**
 	 * 
 	 * @var blInputStreamAdapteour
 	 */
-	private $_inputStream = null;
+	var $_inputStream = null;
 	
 	/**
 	 * @var blImgCache
 	 */
-	private $_imgCache = null;
+	var $_imgCache = null;
 	
 	/**
 	 * 
 	 * @var fImgPathPredictor
 	 */
-	private $_imgPredictor = null;
+	var $_imgPredictor = null;
 	
 	
 	/**
 	 * 
 	 * @var blImgDownloader
 	 */
-	private $_imgDownloader = null;
+	var $_imgDownloader = null;
 	
-	private $_uploadDir = null;
+	var $_uploadDir = null;
 	
-	private $_uploadUrl = null;
+	var $_uploadUrl = null;
 	
 	/**
 	 * 
 	 * @var fImgNamer
 	 */
-	private $_imgNamer = null;
+	var $_imgNamer = null;
 	
-	public function __construct( blFileSystem $fileSystem,  $inputStream, blImgCache $imgCache, $uploadDir, $uploadUrl ) {
+	function __construct( blFileSystem $fileSystem,  $inputStream, blImgCache $imgCache, $uploadDir, $uploadUrl ) {
 		$this->_setFileSystem( $fileSystem );
 		$this->_setInputStream( $inputStream );
 		$this->_setImgCache( $imgCache);
@@ -931,7 +923,7 @@ class fImgDeliverer {
 	 * @param fImgData $imgData
 	 * @return  fImgData
 	 */
-	public function deliveryImage( fImgData $imgData ) {
+	function deliveryImage( fImgData $imgData ) {
 		$result = $this->_deliveryFromCache( $imgData );
 		//$result = false;
 		if( $result === false )
@@ -942,7 +934,7 @@ class fImgDeliverer {
 		return $result;
 	}
 	
-	private function _deliveryFromCache( fImgData $imgData ) {
+	function _deliveryFromCache( fImgData $imgData ) {
 		
 		$cacheInfo = $this->_getImgCache()->getCacheInfo( $imgData->new->url );
 		
@@ -957,7 +949,7 @@ class fImgDeliverer {
 		return $imgData;
 	}
 	
-	private function _checkCacheValidity( fImgData $imgData, $cacheInfo ) {
+	function _checkCacheValidity( fImgData $imgData, $cacheInfo ) {
 		if( $cacheInfo->valid == true ) return true;
 		
 		if( !file_exists( $cacheInfo->pathOld) ) {
@@ -977,7 +969,7 @@ class fImgDeliverer {
 		}
 	} 
 	
-	private function _deliveryFromLocal( fImgData $imgData ) {
+	function _deliveryFromLocal( fImgData $imgData ) {
 		$path = $this->_getImgPredictor()->predictPath( $imgData->old->url );
 		
 		if( $path != null ) {
@@ -992,7 +984,7 @@ class fImgDeliverer {
 	}	
 	
 	
-	private function _deliveryFromRemote( fImgData $imgData ) {
+	function _deliveryFromRemote( fImgData $imgData ) {
 
 		$remoteFilename = $this->_getImgNamer()->getRemoteImageName( $imgData->old->url );
 		$remotePath = $this->_getUploadDirPath('remote/' . $remoteFilename);
@@ -1031,23 +1023,23 @@ class fImgDeliverer {
 /*----------------------------------------------------------------------------*/
 /* SETTERS AND GETTERS
 /*----------------------------------------------------------------------------*/
-	private function _getUploadDirPath( $path ) {
+	function _getUploadDirPath( $path ) {
 		return $this->_getUploadDir() . $path;
 	}
 	
-	private function _getUploadUrlPath ( $path ) {
+	function _getUploadUrlPath ( $path ) {
 		return $this->_getUploadUrl() .'/'. $path;
 	}
 		
 	
-	private function _getUploadUrl() {
+	function _getUploadUrl() {
 		return $this->_uploadUrl;
 	}
 	
-	private function _setUploadUrl( $uploadUrl ) { 
+	function _setUploadUrl( $uploadUrl ) { 
 		$this->_uploadUrl = $uploadUrl;
 	}
-	private function _getImgDownloader() {
+	function _getImgDownloader() {
 		if( $this->_imgDownloader == null ) {
 			$this->_imgDownloader = new blImgDownloader( $this->_getFileSystem(), $this->_getInputStream() );
 		}
@@ -1055,7 +1047,7 @@ class fImgDeliverer {
 		return $this->_imgDownloader;
 	}
 	
-	private function _getImgNamer() { 
+	function _getImgNamer() { 
 		if( $this->_imgNamer == null ) { 
 			$this->_imgNamer = new fImgNamer();
 		}
@@ -1063,18 +1055,18 @@ class fImgDeliverer {
 		return $this->_imgNamer;
 	}
 	
-	private function _setUploadDir( $uploadDir ) {
+	function _setUploadDir( $uploadDir ) {
 		$this->_uploadDir = $uploadDir;
 	}
 	
-	private function _getUploadDir() {
+	function _getUploadDir() {
 		return $this->_uploadDir;
 	}
 	
 	/**
 	 * @return fImgPathPredictor
 	 */
-	private function _getImgPredictor() {
+	function _getImgPredictor() {
 		if( $this->_imgPredictor == null ) {
 			$this->_imgPredictor = new fImgPathPredictor();
 		}
@@ -1082,7 +1074,7 @@ class fImgDeliverer {
 		return $this->_imgPredictor;
 	}
 	
-	private function _setImgCache( blImgCache $imgCache ) {
+	function _setImgCache( blImgCache $imgCache ) {
 		$this->_imgCache = $imgCache;
 	}
 	
@@ -1090,41 +1082,41 @@ class fImgDeliverer {
 	 * 
 	 * @return blImgCache
 	 */
-	private function _getImgCache(){
+	function _getImgCache(){
 		return $this->_imgCache;
 	}
-	private function _setFileSystem( blFileSystem $fileSystem ) {
+	function _setFileSystem( blFileSystem $fileSystem ) {
 		$this->_fileSystem = $fileSystem;
 	}
 	
 	/**
 	 * @return blFileSystem
 	 */
-	private function _getFileSystem() { 
+	function _getFileSystem() { 
 		return $this->_fileSystem;
 	}
 	
-	private function _setInputStream( blInputStreamAdapteour $inputStream ) {
+	function _setInputStream( blInputStreamAdapteour $inputStream ) {
 		$this->_inputStream = $inputStream;
 	}
 	
 	/**
 	 * @return blInputStreamAdapteour
 	 */
-	private function _getInputStream() {
+	function _getInputStream() {
 		return $this->_inputStream;
 	}
 }
 
 
 class fImgNamer {
-	private $_defaultUrl = null;
-	private $_temporaryPathInfo = null;
+	var $_defaultUrl = null;
+	var $_temporaryPathInfo = null;
 	
-	public function __construct( $defaultUrl = null ) {
+	function __construct( $defaultUrl = null ) {
 		$this->_setDefaultUrl( $defaultUrl ); 
 	}
-	public function getNewImageName( $oldUrl, $width, $height = false, $crop = false, $remote = false) {
+	function getNewImageName( $oldUrl, $width, $height = false, $crop = false, $remote = false) {
 		$newUrl =  '';
 		
 		$partRemote = ( $remote ) ? 'remote/' : '';
@@ -1144,7 +1136,7 @@ class fImgNamer {
 		return $newUrl;
 	}
 	
-	public function getNewImageUrl( $oldUrl, $width, $height = false, $crop = false, $remote = false ) {
+	function getNewImageUrl( $oldUrl, $width, $height = false, $crop = false, $remote = false ) {
 		/**
 		 * http://defaulturl(freshizer)/[remote]/$oldUrlHash_imgFilename-width[-height][-c(rop)].ext
 		 */
@@ -1168,7 +1160,7 @@ class fImgNamer {
 		return $newUrl;
  	}
  	
- 	public function getRemoteImageName( $url ) {
+ 	function getRemoteImageName( $url ) {
  		$pathInfo = pathinfo( $url );
  		$newName = '';
  		$newName .= $this->_getUrlHash( $url );
@@ -1177,56 +1169,37 @@ class fImgNamer {
  		return $newName;
  	}
  	
- 	private function _getImgExtension() {
+ 	function _getImgExtension() {
  		$pathInfo = $this->_getTemporaryPathInfo();
  		return '.'.$pathInfo['extension'];
  	}
  	
- 	private function _getImgName( $oldUrl ) {
+ 	function _getImgName( $oldUrl ) {
  		$pathInfo = pathinfo( $oldUrl );
  		$this->_setTemporaryPathInfo( $pathInfo );
  		return $pathInfo['filename'];
  	}
  	
- 	private function _setTemporaryPathInfo( $pathInfo ) {
+ 	function _setTemporaryPathInfo( $pathInfo ) {
  		$this->_temporaryPathInfo = $pathInfo;
  	}
  	
- 	private function _getTemporaryPathInfo() {
+ 	function _getTemporaryPathInfo() {
  		return $this->_temporaryPathInfo;
  	}
  	
- 	private function _getUrlHash( $url ) {
+ 	function _getUrlHash( $url ) {
  		return md5($url);
  	}
 	
-	private function _setDefaultUrl( $defaultUrl ) {
+	function _setDefaultUrl( $defaultUrl ) {
 		$this->_defaultUrl = $defaultUrl;
 	}
 	
-	private function _getDefaultUrl() {
+	function _getDefaultUrl() {
 		return $this->_defaultUrl;
 	}
 }
-
-
-interface fIImgPathPredictor {
-	public function predictPath( $url );
-	
-	/*private function _predictionJunction();
-	private function _predictUploads();
-	private function _predictThemes();
-	private function _predictPlugins();*/
-}
-
-abstract class fAImgPathPredictor implements fIImgPathPredictor { 
-	abstract public function predictPath( $url );
-	
-	abstract protected function _predictUploads();
-	abstract protected function _predictThemes();
-	abstract protected function _predictPlugins();
-}
-
 
 class fImgPathPredictor {
 	
@@ -1234,14 +1207,14 @@ class fImgPathPredictor {
 	 * 
 	 * @var fIImgPathPredictor
 	 */
-	private $_predictor = null;
+	var $_predictor = null;
 	
-	public function predictPath( $url ) {
+	function predictPath( $url ) {
 		return $this->_getPredictor()->predictPath( $url );
 	}
 	
 	
-	private function _initializePredictor() {
+	function _initializePredictor() {
 		global $blog_id;
 		
 		if( is_multisite() && $blog_id != 1) { 
@@ -1251,14 +1224,14 @@ class fImgPathPredictor {
 		}
 	}
 	
-	private function _setPredictor( fIImgPathPredictor $predictor) {
+	function _setPredictor( $predictor) {
 		$this->_predictor = $predictor;
 	}
 	
 	/**
 	 * @return fIImgPathPredictor
 	 */
-	private function _getPredictor() {
+	function _getPredictor() {
 		if( $this->_predictor == null ) {
 			$this->_initializePredictor();
 		}
@@ -1266,18 +1239,18 @@ class fImgPathPredictor {
 		return $this->_predictor;
 	}
 }
-class fImgPathPredictor_Multisite extends fAImgPathPredictor implements fIImgPathPredictor {
-	private $_imgUrl = null;
-	private $_predictedPath = null;
+class fImgPathPredictor_Multisite {
+	var $_imgUrl = null;
+	var $_predictedPath = null;
 
-	public function predictPath( $url ) {
+	function predictPath( $url ) {
 		$this->_setImgUrl( $url );
 		$this->_predictionJunction();
 
 		return $this->_getPredictedPath();
 	}
 
-	protected function _predictionJunction() {
+	function _predictionJunction() {
 		//echo $this->_getImgUrl().'xxxx';
 		//return;
 		$uploadDir = wp_upload_dir();
@@ -1292,7 +1265,7 @@ class fImgPathPredictor_Multisite extends fAImgPathPredictor implements fIImgPat
 
 	}
 
-	protected function _predictUploads() {
+	function _predictUploads() {
 		$uploadDir = wp_upload_dir();
 		$uploadSubpath = str_replace( $uploadDir['baseurl'],'', $this->_getImgUrl());
 
@@ -1304,7 +1277,7 @@ class fImgPathPredictor_Multisite extends fAImgPathPredictor implements fIImgPat
 
 
 	}
-	protected function _predictThemes() {
+	function _predictThemes() {
 		$splitedUrl = explode('themes/', $this->_getImgUrl() ); //explode() $this->_getImgUrl();
 		$splitedPath = explode('themes/', TEMPLATEPATH);
 		$newRelPath = $splitedPath[0].'themes/'.$splitedUrl[1];
@@ -1313,7 +1286,7 @@ class fImgPathPredictor_Multisite extends fAImgPathPredictor implements fIImgPat
 			$this->_setPredictedPath( $newRelPath );
 		}
 	}
-	protected function _predictPlugins() {
+	function _predictPlugins() {
 		$imgPluginDirSplitted = explode('wp-content/plugins', $this->_getImgUrl() );
 		$imgAfterPluginDir = $imgPluginDirSplited[1];
 
@@ -1327,34 +1300,34 @@ class fImgPathPredictor_Multisite extends fAImgPathPredictor implements fIImgPat
 	}
 
 
-	private function _getPredictedPath() {
+	function _getPredictedPath() {
 		return $this->_predictedPath;
 	}
 
-	private function _setPredictedPath( $predictedPath ) {
+	function _setPredictedPath( $predictedPath ) {
 		$this->_predictedPath = $predictedPath;
 	}
 
-	private function _setImgUrl( $imgUrl ) {
+	function _setImgUrl( $imgUrl ) {
 		$this->_imgUrl = $imgUrl;
 	}
 
-	private function _getImgUrl() {
+	function _getImgUrl() {
 		return $this->_imgUrl;
 	}
 }
 
-class fImgPathPredictor_Single extends fAImgPathPredictor implements fIImgPathPredictor {
-	private $_imgUrl = null;
-	private $_predictedPath = null;
+class fImgPathPredictor_Single {
+	var $_imgUrl = null;
+	var $_predictedPath = null;
 	
-	public function predictPath( $url ) {
+	function predictPath( $url ) {
 		$this->_setImgUrl( $url );
 		$this->_predictionJunction();
 		return $this->_getPredictedPath();
 	}
 	
-	protected function _predictionJunction() {
+	function _predictionJunction() {
 		if( strpos( $this->_getImgUrl(), 'wp-content/uploads') !== false ) {
 			$this->_predictUploads();
 		} else if ( strpos( $this->_getImgUrl(), 'wp-content/themes') !== false ) {
@@ -1365,7 +1338,7 @@ class fImgPathPredictor_Single extends fAImgPathPredictor implements fIImgPathPr
 		
 	}
 	
-	protected function _predictUploads() {
+	function _predictUploads() {
 		$imgUploadDirSplited = explode('wp-content/uploads', $this->_getImgUrl() );
 		$imgAfterUploadDir = $imgUploadDirSplited[1];
 		$wpUploadDir = wp_upload_dir();
@@ -1379,7 +1352,7 @@ class fImgPathPredictor_Single extends fAImgPathPredictor implements fIImgPathPr
 		
 		
 	}
-	protected function _predictThemes() {
+	function _predictThemes() {
 		$imgThemeDirSplited = explode('wp-content/themes', $this->_getImgUrl() );
 		$imgAfterThemeDir = $imgThemeDirSplited[1];
 		
@@ -1392,7 +1365,7 @@ class fImgPathPredictor_Single extends fAImgPathPredictor implements fIImgPathPr
 			$this->_setPredictedPath( $newRelPath );
 		}
 	}
-	protected function _predictPlugins() {
+	function _predictPlugins() {
 		$imgPluginDirSplitted = explode('wp-content/plugins', $this->_getImgUrl() ); 
 		$imgAfterPluginDir = $imgPluginDirSplited[1];
 		
@@ -1406,19 +1379,19 @@ class fImgPathPredictor_Single extends fAImgPathPredictor implements fIImgPathPr
 	}
 	
 	
-	private function _getPredictedPath() {
+	function _getPredictedPath() {
 		return $this->_predictedPath;
 	}
 	
-	private function _setPredictedPath( $predictedPath ) {
+	function _setPredictedPath( $predictedPath ) {
 		$this->_predictedPath = $predictedPath;
 	}
 	
-	private function _setImgUrl( $imgUrl ) {
+	function _setImgUrl( $imgUrl ) {
 		$this->_imgUrl = $imgUrl;
 	}
 	
-	private function _getImgUrl() {
+	function _getImgUrl() {
 		return $this->_imgUrl;
 	}
 }
@@ -1430,18 +1403,18 @@ class fImgResizer {
 	 * 
 	 * @var blFileSystem
 	 */
-	private $_fileSystem = null;
+	var $_fileSystem = null;
 	
 	/**
 	 * @var fImgResizerCalculator
 	 */
-	private $_imgResizerCalculator = null;
+	var $_imgResizerCalculator = null;
 	
-	public function __construct( blFileSystem $fileSystem ) {
+	function __construct( blFileSystem $fileSystem ) {
 		$this->_setFileSystem($fileSystem);
 	}
 	
-	public function resize( fImgData $imgData ) {// stdClass $pathInfo, stdClass $imgInfo ) {
+	function resize( fImgData $imgData ) {// stdClass $pathInfo, stdClass $imgInfo ) {
 		$imageOld = $this->_openImage( $imgData->old->path );
 		$orig = $this->_getImgDimensions( $imgData->old->path );
 		
@@ -1471,7 +1444,7 @@ class fImgResizer {
 
 	}
 	
-	private function _openImage( $path ) {
+	function _openImage( $path ) {
 		$imageString = $this->_getFileSystem()->openFile( $path )->readAllAndClose();
 
 		@ini_set( 'memory_limit', '256M' );
@@ -1480,14 +1453,14 @@ class fImgResizer {
 	}
 	
 	
-	private function _getImgDimensions( $path ) {
+	function _getImgDimensions( $path ) {
 		$dim = getimagesize( $path );
 		$result = new stdClass();
 		$result->width = $dim[0];
 		$result->height = $dim[1];
 		return $result;
 	}
-	private function _createImage ($width, $height) {
+	function _createImage ($width, $height) {
 		$img = imagecreatetruecolor($width, $height);
 		if ( is_resource($img) && function_exists('imagealphablending') && function_exists('imagesavealpha') ) {
 			imagealphablending($img, false);
@@ -1499,7 +1472,7 @@ class fImgResizer {
 /*----------------------------------------------------------------------------*/
 /* SETTERS AND GETTERS
 /*----------------------------------------------------------------------------*/
-	private function _getImgResizerCalculator() {
+	function _getImgResizerCalculator() {
 		if( $this->_imgResizerCalculator == null ) { 
 			$this->_imgResizerCalculator = new fImgResizerCalculator();
 		}
@@ -1510,18 +1483,18 @@ class fImgResizer {
 	/**
 	 * @return blFileSystem
 	 */
-	private function _getFileSystem() {
+	function _getFileSystem() {
 		return $this->_fileSystem;
 	}
 	
-	private function _setFileSystem( $fileSystem ) {
+	function _setFileSystem( $fileSystem ) {
 		$this->_fileSystem = $fileSystem;
 	}
 }
 
 
 class fImgResizerCalculator {
-	public function calculateNewDimensions($orig_w, $orig_h, $dest_w, $dest_h, $crop = false) {
+	function calculateNewDimensions($orig_w, $orig_h, $dest_w, $dest_h, $crop = false) {
 	
 		if ( $crop ) {
 	
@@ -1573,7 +1546,7 @@ class fImgResizerCalculator {
 	/**
 	 * This function has been take over from wordpress core. It calculate the best proportion to uncropped image
 	 */
-	public function constrainNewDimensions( $current_width, $current_height, $max_width=0, $max_height=0 ) {
+	function constrainNewDimensions( $current_width, $current_height, $max_width=0, $max_height=0 ) {
 	
 		if ( !$max_width and !$max_height )
 			return array( $current_width, $current_height );
@@ -1621,55 +1594,55 @@ class fImg {
 	/**
 	 * @var fImg
 	 */
-	private static $_instance = null;
+	static $_instance = null;
 
 	/**
 	 * @var fImgNamer
 	 */
-	private $_imgNamer = null;
+	var $_imgNamer = null;
 	
 	/**
 	 * @var blFileSystem
 	 */
-	private $_fileSystem = null;
+	var $_fileSystem = null;
 
 	/**
 	 * @var blImgCache
 	 */
-	private $_imgCache = null;
+	var $_imgCache = null;
 	
 	/**
 	 * @var fImgDeliverer
 	 */
-	private $_imgDeliverer = null;
+	var $_imgDeliverer = null;
 	
 	/**
 	 * @var blInputStreamAdapteour
 	 */
-	private $_inputStream = null;
+	var $_inputStream = null;
 	
 	/**
 	 * @var fImgResizer
 	 */
-	private $_imgResizer = null;
+	var $_imgResizer = null;
 	
 	
-	private $_defaultUrl = null;
+	var $_defaultUrl = null;
 	
-	private $_defaultDir = null;
+	var $_defaultDir = null;
 	
 /*----------------------------------------------------------------------------*/
-/* PUBLIC FUNCTIONS
+/* FUNCTIONS
 /*----------------------------------------------------------------------------*/
 		
-	public function __construct() {
+	function __construct() {
 		$this->_createDefaultUrlAndDir();
 		$this->_setImgCache( new blImgCache( $this->_getFileSystem(), $this->_getDefaultDir() ) );
 		$this->_setImgDeliverer( new fImgDeliverer( $this->_getFileSystem(), $this->_getInputStream(), $this->_getImgCache(), $this->_getDefaultDir(), $this->_getDefaultUrl() ) );
 		$this->_setImgResizer( new fImgResizer( $this->_getFileSystem() ) );
 	}
 	
-	public function getInstance() {
+	function getInstance() {
 		if( self::$_instance == null ) {
 			self::$_instance = new fImg();
 		}
@@ -1678,7 +1651,7 @@ class fImg {
 	}
 
 	
-	public static function ResizeC( $url, $width, $height = false, $crop = false ) {
+	static function ResizeC( $url, $width, $height = false, $crop = false ) {
 		$width = (int)$width;
 		$height = (int)$height;
 		
@@ -1686,7 +1659,7 @@ class fImg {
 	}
 	
 
-	public static function resize( $url, $width, $height = false, $crop = false ) {
+	static function resize( $url, $width, $height = false, $crop = false ) {
 		$width = (int)$width;
 		$height = (int)$height;
 		
@@ -1694,7 +1667,7 @@ class fImg {
 	}	
 	
 	
-	private function _resize( $url, $width, $height = false, $crop = false ) {
+	function _resize( $url, $width, $height = false, $crop = false ) {
 
 		$imgData = $this->_getImgData($url, $width, $height, $crop);
 		$imgData = $this->_getImgDeliverer()->deliveryImage( $imgData );
@@ -1714,12 +1687,12 @@ class fImg {
 	}	
 	
 /*----------------------------------------------------------------------------*/
-/* PRIVATE FUNCTIONS
+/* FUNCTIONS
 /*----------------------------------------------------------------------------*/
 	/**
 	 * @return fImgData
 	 */
-	private function _getImgData( $url, $width, $height, $crop ) {
+	function _getImgData( $url, $width, $height, $crop ) {
 		$imgData = $this->_getImageInfoAsClass($url, $width, $height, $crop);
 		$imgData->new->url = $this->_getImgNamer()->getNewImageUrl( $url, $width, $height, $crop);
 		$imgData->new->filename = $this->_getImgNamer()->getNewImageName($url, $width, $height, $crop);
@@ -1731,7 +1704,7 @@ class fImg {
 	 * 
 	 * @return fImgData
 	 */
-	private function _getImageInfoAsClass( $url, $width, $height,$crop) {
+	function _getImageInfoAsClass( $url, $width, $height,$crop) {
 		$imgData = new fImgData();
 		$imgData->old->url = $url;
 		$imgData->new->width = (int)$width;
@@ -1741,7 +1714,7 @@ class fImg {
 		return $imgData;
 	}	
 	
-	private function _createDefaultUrlAndDir() {
+	function _createDefaultUrlAndDir() {
 		$wpUploadDir = wp_upload_dir();
 		$this->_setDefaultUrl( $wpUploadDir['baseurl'].'/freshizer');
 		$this->_setDefaultDir( $wpUploadDir['basedir'].'/freshizer/');
@@ -1750,28 +1723,28 @@ class fImg {
 /*----------------------------------------------------------------------------*/
 /* SETTERS AND GETTERS
 /*----------------------------------------------------------------------------*/
-	private function _setImgResizer( fImgResizer $imgResizer ) {
+	function _setImgResizer( fImgResizer $imgResizer ) {
 		$this->_imgResizer = $imgResizer;
 	}
 	/**
 	 * @return fImgResizer
 	 */
-	private function _getImgResizer() {
+	function _getImgResizer() {
 		return $this->_imgResizer;
 	}
 	
-	private function _setImgDeliverer( fImgDeliverer $imgDeliverer ) {
+	function _setImgDeliverer( fImgDeliverer $imgDeliverer ) {
 		$this->_imgDeliverer = $imgDeliverer;
 	}
 	
 	/**
 	 * @return fImgDeliverer
 	 */
-	private function _getImgDeliverer() {
+	function _getImgDeliverer() {
 		return $this->_imgDeliverer;
 	}
 	
-	private function _setInputStream( blInputStreamAdapteour $inputStream ) {
+	function _setInputStream( blInputStreamAdapteour $inputStream ) {
 		$this->_inputStream = $inputStream;
 	}
 	
@@ -1779,51 +1752,51 @@ class fImg {
 	 * 
 	 * @return blInputStreamAdapteour
 	 */
-	private function _getInputStream() {
+	function _getInputStream() {
 		if( $this->_inputStream == null ) {
 			$this->_inputStream =  new blInputStreamAdapteour() ;
 		}
 		return $this->_inputStream;
 	}
 	
-	private function _setDefaultUrl( $defaultUrl ) {
+	function _setDefaultUrl( $defaultUrl ) {
 		$this->_defaultUrl = $defaultUrl;
 	}
-	private function _getDefaultUrl() {
+	function _getDefaultUrl() {
 		return $this->_defaultUrl;
 	}
 	
-	private function _getImgNamer() {
+	function _getImgNamer() {
 		if( $this->_imgNamer == null ) {
 			$this->_imgNamer = new fImgNamer($this->_getDefaultUrl());
 		}
 		return $this->_imgNamer;
 	}
 	
-	private function _getImgCache() {
+	function _getImgCache() {
 		return $this->_imgCache;
 	}
 	
-	private function _setImgCache( blImgCache $imgCache ) {
+	function _setImgCache( blImgCache $imgCache ) {
 		$this->_imgCache = $imgCache;
 	}
 	
-	private function _getFileSystem() {
+	function _getFileSystem() {
 		if( $this->_fileSystem == null ) {
 			$this->_fileSystem = new blFileSystem();
 		}
 		return $this->_fileSystem;
 	}
 	
-	private function _setDefaultDir( $defaultDir) { 
+	function _setDefaultDir( $defaultDir) { 
 		$this->_defaultDir = $defaultDir;
 	}
 	
-	private function _getDefaultDir() { 
+	function _getDefaultDir() { 
 		return $this->_defaultDir;
 	}
 	
-	public static function DeleteCache() {
+	static function DeleteCache() {
 		
 	}
 }
