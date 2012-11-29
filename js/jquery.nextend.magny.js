@@ -337,6 +337,9 @@
       if(plg.options.magnifierShowed < 2 && plg.options.magnifierShowedHideCheck != true){
         plg.options.magnifierShowed = 3;
         plg.magny.stop().fadeIn(400, function(){
+          try{
+          _gaq.push(['_trackEvent', 'Nextend Image Magnifier', 'Show magnifier', plg.options.img]);
+          }catch(e){};
         	plg.options.magnifierShowed = 2;
         });
       }
@@ -361,6 +364,9 @@
           plg.magny.addClass('new-im-hidden');
           if(e && e.data.delayed){
 	          setTimeout(function(){
+              try{
+              _gaq.push(['_trackEvent', 'Nextend Image Magnifier', 'Hide magnifier', plg.options.img]);
+              }catch(e){};
 	        		plg.options.magnifierShowed = 0;
 	        		plg.options.magnifierShowedHideCheck = false;
 	        	}, 100);
