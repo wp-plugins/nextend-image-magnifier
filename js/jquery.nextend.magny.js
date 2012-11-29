@@ -91,6 +91,9 @@
      */
     this.onLoad = function(){
     	if(plg.thumbloaded && plg.loaded){
+        a.fadeOut(400, function(){
+          $(this).css('display', 'none');
+        });
         plg.onResize(true);
      	}
     };
@@ -140,7 +143,6 @@
           
           plg.magny.on('mousewheel', plg.onScroll);
           
-          a.fadeOut();
           plg.mousemove(plg.lastE);
           
           plg.sliderEL.on( "slide slidechange", function(event, ui) {

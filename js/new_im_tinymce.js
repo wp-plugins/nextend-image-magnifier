@@ -4,7 +4,7 @@
 			ed.addCommand('initShortcodeGenerator', function() {
 				ed.windowManager.open({
           title: 'Nextend Image Magnifier',
-					file : url+'/../ajax.php?action=load_generator&tinymce=1',
+					file : tinymce.documentBaseURL+'admin-ajax.php?action=load_generator&tinymce=1',
 					width : 700,
 					height : 600,
 					inline : 1

@@ -456,7 +456,7 @@ Slider skin
   float: left;
 }
 
-.new-im-slider-4{
+.new-im-slider-3 .new-im-slider-4{
   float: left;
   position: relative;
   width: 100%;
@@ -464,9 +464,10 @@ Slider skin
   margin-top: 7px;
   background: #dddddd;
   border-radius: 4px;
+  border: 0;
 }
 
-.new-im-slider-4 a{
+.new-im-slider-3 .new-im-slider-4 a{
   float:left;
   position: absolute;
   z-index: 2;
@@ -476,6 +477,7 @@ Slider skin
   top: -6px;
   margin-left: -10px;
   background: url('../images/slidercontrols.png') no-repeat 0 0;
+  border: 0;
 }
 
 .new-im-slider-5{
