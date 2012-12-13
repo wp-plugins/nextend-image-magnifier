@@ -5,7 +5,7 @@ Plugin URI: http://nextendweb.com
 Description: Easy to use plugin for high-res images with magnifying glass 
 Author: Roland Soos
 Author URI: http://nextendweb.com
-Version: 1.0.5
+Version: 1.0.6
 License: GPL2
 */
 
@@ -78,20 +78,7 @@ function new_im_shortcode($atts){
   if($click == 0){
   	echo '<a href="'.$link_url.'">';
   }
-  echo '<img src="'.$thumb.'" 
-  	title="'.$title.'" 
-  	alt="'.$description.'" 
-  	data-img="'.$image.'" 
-  	data-align="'.$align.'" 
-  	data-click="'.$click.'" 
-  	data-link_url="'.$link_url.'" 
-  	data-scroll_zoom="'.$scroll_zoom.'" 
-  	data-scroll_size="'.$scroll_size.'" 
-  	data-maxwidth="'.$maxwidth.'" 
-  	data-zoom="'.$zoom.'" 
-  	data-dia="'.$dia.'" 
-  	data-skin="'.$skin.'" 
-  	class="magny magny'.$count.'" />';
+  echo '<img src="'.$thumb.'" title="'.$title.'" alt="'.$description.'" data-img="'.$image.'" data-align="'.$align.'" data-click="'.$click.'" data-link_url="'.$link_url.'" data-scroll_zoom="'.$scroll_zoom.'" data-scroll_size="'.$scroll_size.'" data-maxwidth="'.$maxwidth.'" data-zoom="'.$zoom.'" data-dia="'.$dia.'" data-skin="'.$skin.'" class="magny magny'.$count.'" />';
   if($click == 0){
   	echo '</a>';
   }
