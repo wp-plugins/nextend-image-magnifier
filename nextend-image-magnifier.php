@@ -5,7 +5,7 @@ Plugin URI: http://nextendweb.com
 Description: Easy to use plugin for high-res images with magnifying glass 
 Author: Roland Soos
 Author URI: http://nextendweb.com
-Version: 1.0.6
+Version: 1.0.7
 License: GPL2
 */
 

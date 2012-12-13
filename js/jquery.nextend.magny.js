@@ -227,7 +227,7 @@
      * When images are NOT loaded and magnifier showed
      */
     this.mousemoveNotloaded = function(e){
-      plg.offset = plg.el.offset();
+      plg.offset = plg.normalizedOffset(plg.el);
       var origX = (e.pageX-plg.offset.left)*-1;
       var origY = (e.pageY-plg.offset.top)*-1;
 
@@ -346,7 +346,7 @@
     };
     
     this.showMagnifierCentered = function(){
-			var offset = plg.el.offset();
+			var offset = plg.normalizedOffset(plg.el);
     	plg.lastE.pageX = plg.offset.left+plg.el.width()/2;
     	plg.lastE.pageY = plg.offset.top+plg.el.height()/2;
     	plg.mousemove(plg.lastE);
@@ -392,7 +392,6 @@
       });
       
       plg.options.sizeShift = (size-plg.options.border)/2;
-      
       plg.refreshSizes();
       
       if(plg.lastE)
@@ -552,7 +551,7 @@
     	if(first == true){
     		plg.onOrientationchange();
     	}
-      plg.offset = plg.el.offset();
+      plg.offset = plg.normalizedOffset(plg.el);
       plg.options.width = plg.el.width()+parseInt(plg.el.css("border-left-width"))+parseInt(plg.el.css("border-right-width"));
       plg.options.height = plg.el.height()+parseInt(plg.el.css("border-top-width"))+parseInt(plg.el.css("border-bottom-width"));
       plg.options.border = parseInt(plg.magny.css("border-left-width"))*2;
@@ -562,7 +561,7 @@
       if(first == true){
         plg.changeMagnySize(plg.options.size);
         if(plg.options.isTouch){
-        	var offset = plg.el.offset();
+        	var offset = plg.normalizedOffset(plg.el);
         	plg.lastE.pageX = plg.offset.left+plg.options.size/1.75;
         	plg.lastE.pageY = plg.offset.top+plg.options.size/1.75;
         	plg.mousemove(plg.lastE);
@@ -770,6 +769,38 @@
 	      	debug.html(t+'<br />'+debug.html());
 	      }
      }
+    }
+    
+    this.normalizedOffset = function(el){
+      var body = $(document.body);
+      var position = body.css('position')
+      if(position == 'absolute' || position == 'relative'){
+        var bodyOffset = plg.crossBrowserOffset(document.body);
+        var offset = el.offset();
+        offset.top-=bodyOffset.top;
+        offset.left-=bodyOffset.left;
+        return offset;
+      }
+      return el.offset();
+    }
+    
+    this.crossBrowserOffset = function(element){
+        var body = document.body,
+            win = document.defaultView,
+            docElem = document.documentElement,
+            box = document.createElement('div');
+        box.style.paddingLeft = box.style.width = "1px";
+        body.appendChild(box);
+        var isBoxModel = box.offsetWidth == 2;
+        body.removeChild(box);
+        box = element.getBoundingClientRect();
+        var clientTop  = docElem.clientTop  || body.clientTop  || 0,
+            clientLeft = docElem.clientLeft || body.clientLeft || 0,
+            scrollTop  = win.pageYOffset || isBoxModel && docElem.scrollTop  || body.scrollTop,
+            scrollLeft = win.pageXOffset || isBoxModel && docElem.scrollLeft || body.scrollLeft;
+        return {
+            top : box.top  + scrollTop  - clientTop,
+            left: box.left + scrollLeft - clientLeft};
     }
     
     this.init();

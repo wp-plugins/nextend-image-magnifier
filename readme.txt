@@ -4,7 +4,7 @@ Tags: image, gallery, magnifier, magny, nextend, picture, magnify, enlarge, glas
 Donate link: https://www.facebook.com/nextendweb
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,9 @@ You will find the short code buttons in the text editors. See screenshot #1
 3. WordPress editor and TinyMCE intergration
 
 == Changelog ==
+
+= 1.0.7 =
+* Fix for sites with position relative/absolute body tag
 
 = 1.0.6 =
 * Fix for WP 3.5
