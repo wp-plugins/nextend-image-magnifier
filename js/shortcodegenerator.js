@@ -26,11 +26,28 @@
   		tb_remove();
   	}
   
-  	formfield = jQuery('#new_im_image').attr('name');
   	tb_show('', $(this).data('adminurl')+'media-upload.php?type=image&TB_iframe=true&width=640&height=500');
   	return false;
   }
   $('#new_im_image_button').bind('click',new_im_MediaPopupHandler);
+  
+  function new_im_thumbnail_MediaPopupHandler(){
+  	window.send_to_editor = function(html) {
+      var html = $(html);
+      var img = html;
+      if(html.prop("tagName") != 'IMG'){
+	  		img = $('img',html);
+  		}
+  		$('#new_im_small_image').val(img.attr('src'));
+      
+  		tb_remove();
+  	}
+  
+  	tb_show('', $(this).data('adminurl')+'media-upload.php?type=image&TB_iframe=true&width=640&height=500');
+  	return false;
+  }
+  
+  $('#new_im_small_image_button').bind('click',new_im_thumbnail_MediaPopupHandler);
   
   var new_im_click = $('#new_im_click');
   var new_im_link_url_tr = $('.new_im_link_url_tr');
@@ -113,6 +130,8 @@
       c+= 'scroll_zoom="'+$('#new_im_scroll_zoom').val()+'" ';
     if($('#new_im_scroll_size').is(':checked'))
     c+= 'scroll_size="'+$('#new_im_scroll_size').val()+'" ';
+    
+    c+= 'small_image="'+$('#new_im_small_image').val()+'" ';
     
     /* Tab Skin */
     c+= 'maxwidth="'+$('#new_im_maxwidth').val()+'" ';

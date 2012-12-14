@@ -5,7 +5,7 @@ Plugin URI: http://nextendweb.com
 Description: Easy to use plugin for high-res images with magnifying glass 
 Author: Roland Soos
 Author URI: http://nextendweb.com
-Version: 1.0.7
+Version: 1.0.8
 License: GPL2
 */
 
@@ -62,13 +62,16 @@ function new_im_shortcode($atts){
 		'link_url' => '',
 		'scroll_zoom' => 0,
 		'scroll_size' => 0,
+		'small_image' => '',
 		'maxwidth' => '500px',
 		'zoom' => 1,
 		'dia' => '200px',
     'skin' => 'new-im-frame-photo,new-title-below,new-description-off,new-slider-below,new-im-magnifier-light'
 	), $atts ) );
   require_once(ABSPATH . '/wp-admin/includes/image.php');
-  if(strpos($image, site_url())!== false){
+  if($small_image != ''){
+    $thumb = $small_image;
+  }else if(strpos($image, site_url())!== false){
   	require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'freshizer.php';
     $thumb = fImg::resize(str_replace(array(site_url(),'//'),array(ABSPATH,'/'),$image), intval($maxwidth));
   }else{
@@ -383,6 +386,20 @@ function new_im_shortcode_page(){
                 	if(!isset($options['new_im_scroll_size'])) $options['new_im_scroll_size'] = 0;
                 	?>
                   <input type="checkbox" name="new_im_scroll_size" id="new_im_scroll_size" value="1"<?php if($options['new_im_scroll_size'] == 1){?> checked<?php }?>> <label for="new_im_scroll_size">Size</label><br>
+                </td>
+              </tr>
+              <tr>
+                <th>&nbsp;</th>
+                <td></td>
+              </tr>
+              <tr>
+                <th>
+                  <span class="alignleft"><label for="new_im_small_image">Thumbnail image URL (Optional)</label></span>
+                </th>
+                <td>
+                  <input value="" id="new_im_small_image" name="new_im_small_image" type="text" /><br>
+                  <input id="new_im_small_image_button" value="Add from media library" data-adminurl="<?php echo admin_url(); ?>" class="button" type="button" />
+                  The plugin will generate the thumbnail if you leave it blank.
                 </td>
               </tr>
             </tbody>
