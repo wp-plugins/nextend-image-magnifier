@@ -5,7 +5,7 @@ Plugin URI: http://nextendweb.com
 Description: Easy to use plugin for high-res images with magnifying glass 
 Author: Roland Soos
 Author URI: http://nextendweb.com
-Version: 1.0.11
+Version: 1.0.12
 License: GPL2
 */
 
@@ -67,6 +67,7 @@ function new_im_shortcode($atts){
 		'maxwidth' => '500px',
 		'zoom' => 1,
 		'dia' => '200px',
+    'canvas_mode' => '0',
     'skin' => 'new-im-frame-photo,new-title-below,new-description-off,new-slider-below,new-im-magnifier-light'
 	), $atts ) );
   require_once(ABSPATH . '/wp-admin/includes/image.php');
@@ -82,7 +83,7 @@ function new_im_shortcode($atts){
   if($click == 0){
   	echo '<a href="'.$link_url.'">';
   }
-  echo '<img src="'.$thumb.'" title="'.$title.'" alt="'.$description.'" data-img="'.$image.'" data-align="'.$align.'" data-click="'.$click.'" data-link_url="'.$link_url.'" data-scroll_zoom="'.$scroll_zoom.'" data-scroll_size="'.$scroll_size.'" data-maxwidth="'.$maxwidth.'" data-zoom="'.$zoom.'" data-dia="'.$dia.'" data-skin="'.$skin.'" class="magny magny'.$count.'" />';
+  echo '<img src="'.$thumb.'" title="'.$title.'" alt="'.$description.'" data-img="'.$image.'" data-align="'.$align.'" data-click="'.$click.'" data-link_url="'.$link_url.'" data-scroll_zoom="'.$scroll_zoom.'" data-scroll_size="'.$scroll_size.'" data-maxwidth="'.$maxwidth.'" data-zoom="'.$zoom.'" data-dia="'.$dia.'" data-canvas_mode="'.$canvas_mode.'" data-skin="'.$skin.'" class="magny magny'.$count.'" />';
   if($click == 0){
   	echo '</a>';
   }
@@ -204,6 +205,18 @@ function new_im_global_settings_page() {
                 	if(!isset($options['new_im_scroll_size'])) $options['new_im_scroll_size'] = 0;
                 	?>
                   <input type="checkbox" name="new_im_scroll_size" id="new_im_scroll_size" value="1"<?php if($options['new_im_scroll_size'] == 1){?> checked<?php }?>> <label for="new_im_scroll_size">Size</label><br>
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  <span class="alignleft"><label for="new_im_canvas_mode">Chrome Canvas Mode</label></span>
+                </th>
+                <td>
+                  <?php
+                	if(!isset($options['new_im_canvas_mode'])) $options['new_im_canvas_mode'] = 0;
+                	?>
+                  <input type="checkbox" name="new_im_canvas_mode" id="new_im_canvas_mode" value="1"<?php if($options['new_im_canvas_mode'] == 1){?> checked<?php }?> />
+                  (Only if you experience problem with normal mode)
                 </td>
               </tr>
               <tr>
@@ -381,12 +394,12 @@ function new_im_shortcode_page(){
                 	<?php
                 	if(!isset($options['new_im_scroll_zoom'])) $options['new_im_scroll_zoom'] = 0;
                 	?>
-                  <input type="checkbox" name="new_im_scroll_zoom" id="new_im_scroll_zoom" value="1"<?php if($options['new_im_scroll_zoom'] == 1){?> checked<?php }?>> <label for="new_im_scroll_zoom">Zoom</label><br>
+                  <input type="checkbox" name="new_im_scroll_zoom" id="new_im_scroll_zoom" value="1"<?php if($options['new_im_scroll_zoom'] == 1){?> checked<?php }?> /> <label for="new_im_scroll_zoom">Zoom</label><br>
                   
                 	<?php
                 	if(!isset($options['new_im_scroll_size'])) $options['new_im_scroll_size'] = 0;
                 	?>
-                  <input type="checkbox" name="new_im_scroll_size" id="new_im_scroll_size" value="1"<?php if($options['new_im_scroll_size'] == 1){?> checked<?php }?>> <label for="new_im_scroll_size">Size</label><br>
+                  <input type="checkbox" name="new_im_scroll_size" id="new_im_scroll_size" value="1"<?php if($options['new_im_scroll_size'] == 1){?> checked<?php }?> /> <label for="new_im_scroll_size">Size</label><br>
                 </td>
               </tr>
               <tr>
@@ -401,6 +414,18 @@ function new_im_shortcode_page(){
                   <input value="" id="new_im_small_image" name="new_im_small_image" type="text" /><br>
                   <input id="new_im_small_image_button" value="Add from media library" data-adminurl="<?php echo admin_url(); ?>" class="button" type="button" />
                   The plugin will generate the thumbnail if you leave it blank.
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  <span class="alignleft"><label for="new_im_canvas_mode">Chrome Canvas Mode</label></span>
+                </th>
+                <td>
+                  <?php
+                	if(!isset($options['new_im_canvas_mode'])) $options['new_im_canvas_mode'] = 0;
+                	?>
+                  <input type="checkbox" name="new_im_canvas_mode" id="new_im_canvas_mode" value="1"<?php if($options['new_im_canvas_mode'] == 1){?> checked<?php }?> />
+                  (Only if you experience problem with normal mode)
                 </td>
               </tr>
             </tbody>

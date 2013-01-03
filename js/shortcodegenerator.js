@@ -132,6 +132,7 @@
     c+= 'scroll_size="'+$('#new_im_scroll_size').val()+'" ';
     
     c+= 'small_image="'+$('#new_im_small_image').val()+'" ';
+    c+= 'canvas_mode="'+$('#new_im_canvas_mode').val()+'" ';
     
     /* Tab Skin */
     c+= 'maxwidth="'+$('#new_im_maxwidth').val()+'" ';
