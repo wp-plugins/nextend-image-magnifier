@@ -219,7 +219,7 @@
       plg.magny.css({
         left: e.pageX,
         top: e.pageY,
-        backgroundPosition: Math.round((plg.options.bgLeftModifier+origX)+'px '+Math.round((plg.options.bgTopModifier+origY)+'px'
+        backgroundPosition: Math.round(plg.options.bgLeftModifier+origX)+'px '+Math.round(plg.options.bgTopModifier+origY)+'px'
       });
     };
     
