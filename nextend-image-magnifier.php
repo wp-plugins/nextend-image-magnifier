@@ -5,7 +5,7 @@ Plugin URI: http://nextendweb.com
 Description: Easy to use plugin for high-res images with magnifying glass 
 Author: Roland Soos
 Author URI: http://nextendweb.com
-Version: 1.0.8
+Version: 1.0.9
 License: GPL2
 */
 
@@ -53,6 +53,7 @@ function new_im_shortcode_load_files() {
 function new_im_shortcode($atts){
 	static $count = 0;
 	$count++;
+  if($count == 1) _new_im_shortcode_load_files();
   extract( shortcode_atts( array(
 		'image' => '',
 		'title' => '',
@@ -111,7 +112,7 @@ function new_im_generator(){
     );
 }
 
-add_action('admin_menu', new_im_generator, 1);
+add_action('admin_menu', 'new_im_generator', 1);
 
 function new_im_global_settings_page() {
 	$status = "normal";
