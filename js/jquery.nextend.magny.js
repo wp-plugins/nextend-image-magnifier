@@ -219,7 +219,7 @@
       plg.magny.css({
         left: e.pageX,
         top: e.pageY,
-        backgroundPosition: (plg.options.bgLeftModifier+origX)+'px '+(plg.options.bgTopModifier+origY)+'px'
+        backgroundPosition: Math.round((plg.options.bgLeftModifier+origX)+'px '+Math.round((plg.options.bgTopModifier+origY)+'px'
       });
     };
     
@@ -405,8 +405,8 @@
       zoom = parseFloat(zoom);
       plg.options.zoom = zoom;
       
-      plg.options.realWidth = plg.options.origRealWidth*zoom;
-      plg.options.realHeight = plg.options.origRealHeight*zoom;
+      plg.options.realWidth = Math.round(plg.options.origRealWidth*zoom);
+      plg.options.realHeight = Math.round(plg.options.origRealHeight*zoom);
 
       plg.magny.css({
         backgroundSize: plg.options.realWidth+'px '+plg.options.realHeight+'px'
